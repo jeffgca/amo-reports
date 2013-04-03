@@ -1,0 +1,13 @@
+SELECT DISTINCT(a.id), a.slug, u.email, f.jetpack_version, a.`average_daily_users` as adu, a.`average_daily_downloads` as downloads
+-- SELECT DISTINCT(f.jetpack_version)
+FROM file_uploads fu
+INNER JOIN users as u ON u.`id` = fu.`user_id`
+INNER JOIN addons_users as au ON au.`user_id` = u.id
+INNER JOIN `addons` as a ON au.`addon_id` = a.`id`
+INNER JOIN `versions` as v ON v.addon_id = a.id
+INNER JOIN `files` as f ON f.version_id = v.id
+WHERE DATE(v.`created`) > '2010-12-31' 
+AND v.`id` = a.`current_version`
+AND a.inactive = 0 
+AND a.status NOT IN (0, 5,10)
+AND f.jetpack_version NOT IN ( '1.12', '1.13', '1.13.1', '1.13.2' );

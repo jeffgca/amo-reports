@@ -1,0 +1,42 @@
+all: >
+    SELECT DISTINCT(fu.user_id), u.`display_name`, u.email FROM file_uploads fu
+    INNER JOIN users as u ON u.`id` = fu.`user_id`
+    INNER JOIN addons_users as au ON au.`user_id` = u.id
+    INNER JOIN `addons` as a ON au.`addon_id` = a.`id`
+    INNER JOIN `versions` as v ON v.addon_id = a.id
+    INNER JOIN `files` as f ON f.version_id = v.id
+    WHERE DATE(v.`created`) > '2010-12-31' 
+    AND v.`id` = a.`current_version`
+    AND a.inactive = 0 
+    AND a.status NOT IN (0, 5,10);
+
+sdk: >
+    SELECT DISTINCT(fu.user_id), u.`display_name`, u.email
+    FROM file_uploads fu
+    INNER JOIN users as u ON u.`id` = fu.`user_id`
+    INNER JOIN addons_users as au ON au.`user_id` = u.id
+    INNER JOIN `addons` as a ON au.`addon_id` = a.`id`
+    INNER JOIN `users_tags_addons` as uta ON uta.`addon_id` = a.id
+    INNER JOIN `versions` as v ON v.addon_id = a.id
+    INNER JOIN `files` as f ON f.version_id = v.id
+    WHERE DATE(v.`created`) > '2010-12-31' 
+    AND `tag_id` = 7758
+    AND v.`id` = a.`current_version`
+    AND a.inactive = 0 
+    AND a.status NOT IN (0, 5,10);
+
+builder: >
+    SELECT DISTINCT(fu.user_id), u.`display_name`, u.email
+    FROM file_uploads fu
+    INNER JOIN users as u ON u.`id` = fu.`user_id`
+    INNER JOIN addons_users as au ON au.`user_id` = u.id
+    INNER JOIN `addons` as a ON au.`addon_id` = a.`id`
+    INNER JOIN `users_tags_addons` as uta ON uta.`addon_id` = a.id
+    INNER JOIN `versions` as v ON v.addon_id = a.id
+    INNER JOIN `files` as f ON f.version_id = v.id
+    WHERE DATE(v.`created`) > '2010-12-31' 
+    AND `tag_id` = 7758
+    AND a.guid LIKE 'jid0%'
+    AND v.`id` = a.`current_version`
+    AND a.inactive = 0 
+    AND a.status NOT IN (0, 5,10);

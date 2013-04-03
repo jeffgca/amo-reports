@@ -1,0 +1,13 @@
+daily_sql: > 
+    SELECT COUNT(jpr.id) AS count 
+    FROM jetpack_packagerevision jpr
+    INNER JOIN jetpack_package jp ON jpr.package_id = jp.id
+    WHERE jp.author_id != 21322
+    AND DATE(jpr.created_at) = ?
+monthly_sql: >
+    SELECT COUNT(jpr.id) AS count 
+    FROM jetpack_packagerevision jpr
+    INNER JOIN jetpack_package jp ON jpr.package_id = jp.id
+    WHERE jp.author_id != 21322
+    AND DATE(jpr.created_at) >= ? 
+    AND DATE(jpr.created_at) < ?

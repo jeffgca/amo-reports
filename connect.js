@@ -3,7 +3,6 @@
 var util = require('util'),
 	fs = require('fs'),
 	path = require('path'),
-	// moment = require('moment'),
 	moment = require('moment-range'),
 	async = require('async'),
 	csv = require('csv'),

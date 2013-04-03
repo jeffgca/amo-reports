@@ -1,0 +1,44 @@
+auth_user: >
+    SELECT COUNT(id) as user_count FROM auth_user;
+all_addons: > 
+    SELECT COUNT(id) as addon_count from jetpack_package WHERE type = 'a';
+all_modules: >
+    SELECT COUNT(id) as module_count from jetpack_package WHERE type = 'l';
+non_copy_addons: >
+    SELECT COUNT(DISTINCT(package_id)) as non_copy_total FROM `jetpack_packagerevision` WHERE origin_id IS NOT NULL ORDER BY package_id
+non_copy_addon_revisions: >
+    SELECT jpr.id, jpr.package_id, jp.author_id
+    FROM `jetpack_packagerevision` jpr
+    INNER JOIN jetpack_package jp ON jpr.`package_id` = jp.id  
+    WHERE origin_id IS NOT NULL ORDER BY package_id ASC
+addons_revisions: >
+    SELECT COUNT(id) AS revision_count FROM `jetpack_packagerevision` WHERE package_id = ?;
+amo_builder_guids: >
+    SELECT DISTINCT(a.guid)
+    FROM file_uploads fu
+    INNER JOIN users as u ON u.`id` = fu.`user_id`
+    INNER JOIN addons_users as au ON au.`user_id` = u.id
+    INNER JOIN `addons` as a ON au.`addon_id` = a.`id`
+    INNER JOIN `users_tags_addons` as uta ON uta.`addon_id` = a.id
+    INNER JOIN `versions` as v ON v.addon_id = a.id
+    INNER JOIN `files` as f ON f.version_id = v.id
+    WHERE `tag_id` = 7758
+    AND a.guid LIKE 'jid0%'
+    AND v.`id` = a.`current_version`
+    AND a.inactive = 0 
+    AND a.status NOT IN (0, 5,10)
+builder_guids_users: >
+    SELECT author_id
+    FROM jetpack_package 
+    WHERE program_id IN (?)
+builder_users_active: >
+    SELECT COUNT(DISTINCT(author_id)) as active_user_count 
+    FROM `jetpack_packagerevision`
+    WHERE author_id != 21322 
+    AND DATE(created_at) >= ? 
+    AND DATE(created_at) < ?
+builder_users_created: >
+    SELECT COUNT(DISTINCT(id)) AS created_user_count FROM `auth_user`
+    WHERE id != 21322 
+    AND DATE(date_joined) >= ? 
+    AND DATE(date_joined) < ?
